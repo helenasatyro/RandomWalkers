@@ -1,22 +1,25 @@
+import java.util.Arrays;
+
 public class Pessoa {
 	private int posicaoY;
 	private int posicaoX;
 	private Sala sala;
+	private String nome;
 	
-	public Pessoa(int X, int Y, Sala sala) {
+	public Pessoa( Sala sala, String nome, int X, int Y) {
 		this.posicaoY = Y;
 		this.posicaoX = X;
 		this.sala = sala;
-		
-		System.out.println(this.sala);
-		System.out.println(this);
+		this.nome = nome;
+		this.andar(1, 0);
 		
 	}
 	
-	public Pessoa(Sala sala) {
+	public Pessoa(Sala sala, String nome) {
 		this.sala = sala;
 		this.posicaoY = sala.eixoY() / 2;
-		this.posicaoX = sala.eixoX();
+		this.posicaoX = sala.eixoX() / 2;
+		this.nome = nome;
 		
 		System.out.println(this.sala);
 		System.out.println(this);
@@ -24,6 +27,7 @@ public class Pessoa {
 	}
 	
 	public void normalizarPosicao() {
+	
 		if (this.posicaoY > this.sala.eixoY()) {
 			this.posicaoY = this.sala.eixoY() - (this.posicaoY - this.sala.eixoY());
 		} else if (this.posicaoX > this.sala.eixoX()) {
@@ -41,33 +45,47 @@ public class Pessoa {
 	}
 	
 	
-	public void andar(String dir, int passos) {
-
+	public void andar(int dir, int passos) {
 		
-		if (dir.equals("R")) {
+		if (dir == 0) {
 			this.posicaoX += passos;
 			
-		} else if (dir.equals("L")) {
+		} else if (dir == 1) {
 			this.posicaoX -= passos;
-		} else if (dir.equals("U")) {
+		} else if (dir == 2) {
 			this.posicaoY += passos;
-		} else if (dir.equals("D")) {
+		} else if (dir == 3) {
 			this.posicaoY -= passos;
 		}
 		
 		normalizarPosicao();
-		System.out.println( "Você está em ("
-					+ this.posicaoX + ", " + this.posicaoY + ")");
+		this.sala.celulasPercorridas()[posicaoX -1][posicaoY -1] += 1;
 		
-	}
-	
-	public void andar(String dir) {
-		andar(dir, 1);
+		System.out.println(this);	
 	}
 	
 	public String toString() {
-		return ("Você está em ("
-					+ this.posicaoX + ", " + this.posicaoY + ")");
+	
+		String salaAtual = "\n";
+		
+		for (int i = 0; i < this.sala.eixoX(); i++) {
+			for (int j = 0; j < this.sala.eixoY(); j++) {
+				if( i == posicaoX -1 && j == posicaoY -1) {
+					salaAtual = salaAtual + 1 + " ";
+				} else {
+					salaAtual = salaAtual + 0 + " ";
+				}
+			}
+			salaAtual += "\n";
+		}
+		salaAtual += "\n>> " + nome + " está em (" + this.posicaoX + ", " + this.posicaoY + ")";
+		return salaAtual;
 	}
+	
+	public void andar(int dir) {
+		andar(dir, 1);
+	}
+	
+	
 }
 	
